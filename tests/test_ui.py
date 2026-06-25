@@ -43,3 +43,15 @@ def test_form_page_contains_contact_field(test_client):
     assert b"Anfrage senden" in response.content
     assert b"consent" in response.content
     assert b"contact" in response.content
+
+
+def test_admin_page_contains_table_headers(test_client):
+    response = test_client.get("/admin")
+    assert b"Kontakt" in response.content
+    assert b"Datum" in response.content
+    assert b"L\xc3\xb6schen" in response.content
+
+
+def test_admin_page_shows_empty_message_when_no_leads(test_client):
+    response = test_client.get("/admin")
+    assert b"Noch keine Anfragen" in response.content

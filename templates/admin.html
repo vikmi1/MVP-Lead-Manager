@@ -1,6 +1,55 @@
 <!DOCTYPE html>
-<html><body><h1>Admin</h1>
-{% for lead in leads %}
-<div>{{ lead.name }} {{ lead.contact }}</div>
-{% endfor %}
-</body></html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin — Anfragen</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+    <a href="/">📋 Anfrage</a>
+    <a href="/admin" class="active">🔧 Admin</a>
+</nav>
+<div class="container">
+    <div class="card">
+        <div class="admin-header">
+            <h1>Eingegangene Anfragen</h1>
+            <span class="badge">{{ leads|length }} Anfragen</span>
+        </div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Kontakt</th>
+                    <th>Betreff</th>
+                    <th>Datum</th>
+                    <th>Löschen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                <tr>
+                    <td>{{ lead.id }}</td>
+                    <td>{{ lead.name or '—' }}</td>
+                    <td>{{ lead.contact }}</td>
+                    <td>{{ lead.source or '—' }}</td>
+                    <td>{{ lead.created_at[:10] }}</td>
+                    <td>
+                        <form method="POST" action="/admin/delete/{{ lead.id }}"
+                              onsubmit="return confirm('Diesen Lead wirklich löschen?')">
+                            <button type="submit" class="btn-delete">Löschen</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if not leads %}
+        <p class="empty">Noch keine Anfragen eingegangen.</p>
+        {% endif %}
+    </div>
+</div>
+</body>
+</html>
