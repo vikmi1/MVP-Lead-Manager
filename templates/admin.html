@@ -15,7 +15,11 @@
     <div class="card">
         <div class="admin-header">
             <h1>Eingegangene Anfragen</h1>
-            <span class="badge">{{ leads|length }} Anfragen</span>
+            <div class="header-actions">
+                <span class="badge">{{ leads|length }} Anfragen</span>
+                <a href="/admin/export.csv" class="btn-export">⬇ CSV</a>
+                <a href="/admin/export.json" class="btn-export">⬇ JSON</a>
+            </div>
         </div>
         <table>
             <thead>

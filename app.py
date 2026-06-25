@@ -1,9 +1,12 @@
+import csv
+import io
+import json
 from contextlib import asynccontextmanager
 from pathlib import Path
 from fastapi import FastAPI, Depends, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, Response
 
 import config
 import database
@@ -88,3 +91,36 @@ def admin_page(request: Request):
 def admin_delete(lead_id: int):
     database.delete_lead(config.DB_PATH, lead_id)
     return RedirectResponse(url="/admin", status_code=303)
+
+
+# Большой лимит, чтобы экспортировать все заявки, а не только первые 50
+EXPORT_LIMIT = 1_000_000
+EXPORT_FIELDS = ["id", "created_at", "name", "contact", "source", "comment", "consent"]
+
+
+@app.get("/admin/export.csv", include_in_schema=False)
+def export_csv():
+    leads = database.get_leads(config.DB_PATH, limit=EXPORT_LIMIT, offset=0)
+    buffer = io.StringIO()
+    writer = csv.DictWriter(buffer, fieldnames=EXPORT_FIELDS, extrasaction="ignore")
+    writer.writeheader()
+    for lead in leads:
+        writer.writerow(lead)
+    # BOM, чтобы Excel корректно показывал немецкие умляуты
+    content = "﻿" + buffer.getvalue()
+    return Response(
+        content=content,
+        media_type="text/csv; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=leads.csv"},
+    )
+
+
+@app.get("/admin/export.json", include_in_schema=False)
+def export_json():
+    leads = database.get_leads(config.DB_PATH, limit=EXPORT_LIMIT, offset=0)
+    content = json.dumps(leads, ensure_ascii=False, indent=2)
+    return Response(
+        content=content,
+        media_type="application/json; charset=utf-8",
+        headers={"Content-Disposition": "attachment; filename=leads.json"},
+    )

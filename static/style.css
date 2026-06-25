@@ -125,6 +125,26 @@ button[type=submit]:hover { background: #0c4e54; }
     border-radius: 20px;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.btn-export {
+    background: none;
+    border: 1px solid #01696f;
+    color: #01696f;
+    padding: 0.3rem 0.75rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 180ms;
+    white-space: nowrap;
+}
+.btn-export:hover { background: #01696f; color: white; }
+
 table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
 th {
     text-align: left;

@@ -55,3 +55,37 @@ def test_admin_page_contains_table_headers(test_client):
 def test_admin_page_shows_empty_message_when_no_leads(test_client):
     response = test_client.get("/admin")
     assert b"Noch keine Anfragen" in response.content
+
+
+def test_admin_page_contains_export_buttons(test_client):
+    response = test_client.get("/admin")
+    assert b"/admin/export.csv" in response.content
+    assert b"/admin/export.json" in response.content
+
+
+def test_export_csv_returns_csv_with_leads(test_client):
+    test_client.post("/lead", json={"name": "Klaus", "contact": "k@test.de", "consent": True})
+    response = test_client.get("/admin/export.csv")
+    assert response.status_code == 200
+    assert "text/csv" in response.headers["content-type"]
+    assert "attachment" in response.headers["content-disposition"]
+    assert "leads.csv" in response.headers["content-disposition"]
+    assert "contact" in response.text  # header row
+    assert "k@test.de" in response.text
+
+
+def test_export_json_returns_json_with_leads(test_client):
+    test_client.post("/lead", json={"name": "Anna", "contact": "a@test.de", "consent": True})
+    response = test_client.get("/admin/export.json")
+    assert response.status_code == 200
+    assert "application/json" in response.headers["content-type"]
+    assert "attachment" in response.headers["content-disposition"]
+    assert "leads.json" in response.headers["content-disposition"]
+    data = response.json()
+    assert any(lead["contact"] == "a@test.de" for lead in data)
+
+
+def test_export_csv_empty_has_header_row(test_client):
+    response = test_client.get("/admin/export.csv")
+    assert response.status_code == 200
+    assert "contact" in response.text
