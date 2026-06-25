@@ -1,2 +1,97 @@
 <!DOCTYPE html>
-<html><body><h1>Form</h1></body></html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anfrage</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<nav>
+    <a href="/" class="active">📋 Anfrage</a>
+    <a href="/admin">🔧 Admin</a>
+</nav>
+<div class="container">
+    <div class="card">
+        <h1>Neue Anfrage</h1>
+        <p class="subtitle">Wir melden uns bald bei Ihnen.</p>
+        <form id="lead-form">
+            <div class="field">
+                <label>Name (optional)</label>
+                <input type="text" id="name" placeholder="Klaus Müller">
+            </div>
+            <div class="field">
+                <label>E-Mail oder Telefon *</label>
+                <input type="text" id="contact" placeholder="k.mueller@email.de">
+            </div>
+            <div class="field">
+                <label>Betreff (optional)</label>
+                <input type="text" id="source" placeholder="Probefahrt, Service...">
+            </div>
+            <div class="field">
+                <label>Nachricht (optional)</label>
+                <textarea id="comment" placeholder="VW Tiguan 2024, Mo-Fr..."></textarea>
+            </div>
+            <div class="field checkbox">
+                <label>
+                    <input type="checkbox" id="consent">
+                    Ich stimme der Verarbeitung meiner Daten zu (DSGVO)
+                </label>
+            </div>
+            <div id="error-msg" class="error hidden"></div>
+            <div id="success-msg" class="success hidden">✓ Vielen Dank! Wir melden uns bald.</div>
+            <button type="submit">Anfrage senden →</button>
+        </form>
+    </div>
+</div>
+<script>
+document.getElementById('lead-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const errorEl = document.getElementById('error-msg');
+    const successEl = document.getElementById('success-msg');
+    errorEl.classList.add('hidden');
+    successEl.classList.add('hidden');
+
+    const contact = document.getElementById('contact').value.trim();
+    const consent = document.getElementById('consent').checked;
+
+    if (!contact) {
+        errorEl.textContent = 'Bitte geben Sie Ihre Kontaktdaten ein.';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+    if (!consent) {
+        errorEl.textContent = 'Bitte stimmen Sie der Datenverarbeitung zu.';
+        errorEl.classList.remove('hidden');
+        return;
+    }
+
+    const body = {
+        name: document.getElementById('name').value.trim() || null,
+        contact: contact,
+        source: document.getElementById('source').value.trim() || null,
+        comment: document.getElementById('comment').value.trim() || null,
+        consent: true,
+    };
+
+    try {
+        const res = await fetch('/lead', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(body),
+        });
+        if (res.ok) {
+            document.getElementById('lead-form').reset();
+            successEl.classList.remove('hidden');
+        } else {
+            errorEl.textContent = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später.';
+            errorEl.classList.remove('hidden');
+        }
+    } catch {
+        errorEl.textContent = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später.';
+        errorEl.classList.remove('hidden');
+    }
+});
+</script>
+</body>
+</html>

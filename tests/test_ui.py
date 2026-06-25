@@ -36,3 +36,10 @@ def test_admin_delete_removes_lead(test_client):
     test_client.post(f"/admin/delete/{lead_id}")
     admin_resp = test_client.get("/admin")
     assert b"del@test.de" not in admin_resp.content
+
+
+def test_form_page_contains_contact_field(test_client):
+    response = test_client.get("/")
+    assert b"Anfrage senden" in response.content
+    assert b"consent" in response.content
+    assert b"contact" in response.content
