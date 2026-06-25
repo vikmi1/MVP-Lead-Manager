@@ -1,8 +1,8 @@
 # Lead-Capture Service
 
-MVP-сервис для приёма заявок (лидов) от клиентов. Сохраняет в SQLite, уведомляет менеджера через лог и email.
+MVP-сервис для приёма заявок (лидов) от клиентов. Включает веб-форму для клиентов и страницу менеджера для просмотра и удаления заявок. Сохраняет в SQLite, уведомляет менеджера через лог и email.
 
-**Стек:** Python 3.11+, FastAPI, Pydantic v2, SQLite, uvicorn
+**Стек:** Python 3.11+, FastAPI, Pydantic v2, SQLite, Jinja2, uvicorn
 
 ---
 
@@ -36,7 +36,11 @@ python -c "import secrets; print(secrets.token_hex(32))"
 uvicorn app:app --reload
 ```
 
-Swagger UI: http://localhost:8000/docs
+| Страница | URL |
+|---|---|
+| Форма для клиента | http://localhost:8000 |
+| Страница менеджера | http://localhost:8000/admin |
+| Swagger UI | http://localhost:8000/docs |
 
 ### 4. Тестовый запрос
 
@@ -45,6 +49,17 @@ curl -X POST http://localhost:8000/lead \
   -H "Content-Type: application/json" \
   -d '{"contact": "test@example.de", "consent": true}'
 ```
+
+---
+
+## Веб-интерфейс
+
+| Страница | Путь | Описание |
+|---|---|---|
+| Форма | `/` | Клиент вводит контакт, даёт согласие DSGVO |
+| Менеджер | `/admin` | Таблица заявок с кнопкой Löschen |
+
+Форма отправляет данные через JavaScript fetch(), без перезагрузки страницы. Кнопка «Löschen» на странице менеджера удаляет запись и обновляет таблицу.
 
 ---
 
@@ -73,6 +88,8 @@ curl -X POST http://localhost:8000/lead \
 ```bash
 pytest -v
 ```
+
+44 теста: модели, база данных, авторизация, уведомления, API-роуты, UI-страницы.
 
 ---
 
