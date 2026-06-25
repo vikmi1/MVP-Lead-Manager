@@ -1,5 +1,9 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI, Depends, HTTPException
+from pathlib import Path
+from fastapi import FastAPI, Depends, HTTPException, Request
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
 
 import config
 import database
@@ -15,6 +19,10 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Lead-Capture Service", version="1.0.0", lifespan=lifespan)
+
+BASE_DIR = Path(__file__).parent
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 
 @app.post("/lead", status_code=201)
@@ -63,3 +71,20 @@ def delete_lead(lead_id: int, _: str = Depends(verify_api_key)):
     if not deleted:
         raise HTTPException(status_code=404, detail="not found")
     return {"status": "ok", "message": f"Lead {lead_id} deleted"}
+
+
+@app.get("/", include_in_schema=False)
+def form_page(request: Request):
+    return templates.TemplateResponse("form.html", {"request": request})
+
+
+@app.get("/admin", include_in_schema=False)
+def admin_page(request: Request):
+    leads = database.get_leads(config.DB_PATH)
+    return templates.TemplateResponse("admin.html", {"request": request, "leads": leads})
+
+
+@app.post("/admin/delete/{lead_id}", include_in_schema=False)
+def admin_delete(lead_id: int):
+    database.delete_lead(config.DB_PATH, lead_id)
+    return RedirectResponse(url="/admin", status_code=303)
