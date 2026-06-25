@@ -1,5 +1,7 @@
 import smtplib
 import logging
+import json
+import urllib.request
 from datetime import datetime, timezone
 from email.mime.text import MIMEText
 from typing import Optional
@@ -45,3 +47,40 @@ def send_email(
             smtp.send_message(msg)
     except Exception as e:
         logger.error(f"Failed to send email for lead {lead_id}: {e}")
+
+
+def _post_json(url: str, payload: dict) -> None:
+    data = json.dumps(payload).encode("utf-8")
+    req = urllib.request.Request(
+        url,
+        data=data,
+        headers={"Content-Type": "application/json"},
+        method="POST",
+    )
+    urllib.request.urlopen(req, timeout=10)
+
+
+def send_to_sheet(
+    lead_id: int,
+    name: Optional[str],
+    contact: str,
+    source: Optional[str],
+    comment: Optional[str],
+    consent: bool,
+) -> None:
+    if not config.SHEETS_WEBHOOK_URL:
+        logger.warning("Sheets webhook not configured — skipping")
+        return
+
+    payload = {
+        "id": lead_id,
+        "name": name or "",
+        "contact": contact,
+        "source": source or "",
+        "comment": comment or "",
+        "consent": consent,
+    }
+    try:
+        _post_json(config.SHEETS_WEBHOOK_URL, payload)
+    except Exception as e:
+        logger.error(f"Failed to send lead {lead_id} to sheet: {e}")

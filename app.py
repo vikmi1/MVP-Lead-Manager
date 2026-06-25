@@ -49,6 +49,13 @@ def create_lead(lead: LeadCreate):
     except Exception:
         pass
 
+    try:
+        notifier.send_to_sheet(
+            lead_id, lead.name, lead.contact, lead.source, lead.comment, lead.consent
+        )
+    except Exception:
+        pass
+
     return {
         "status": "ok",
         "message": "Anfrage gespeichert",

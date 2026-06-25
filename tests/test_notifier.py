@@ -64,3 +64,32 @@ def test_send_email_logs_error_on_smtp_failure(monkeypatch, caplog):
         with caplog.at_level(logging.ERROR, logger="notifier"):
             notifier.send_email(1, "Klaus", "k@test.de", None, None)
     assert "Failed to send email" in caplog.text
+
+
+def test_send_to_sheet_skips_when_url_not_configured(monkeypatch):
+    monkeypatch.setattr(config, "SHEETS_WEBHOOK_URL", "")
+    with patch("notifier._post_json") as mock_post:
+        notifier.send_to_sheet(1, "Klaus", "k@test.de", "web", None, True)
+        mock_post.assert_not_called()
+
+
+def test_send_to_sheet_posts_when_url_configured(monkeypatch):
+    monkeypatch.setattr(config, "SHEETS_WEBHOOK_URL", "https://script.google.com/macros/s/abc/exec")
+    with patch("notifier._post_json") as mock_post:
+        notifier.send_to_sheet(7, "Anna", "a@test.de", "Service", "VW Tiguan", True)
+        mock_post.assert_called_once()
+        url, payload = mock_post.call_args.args
+        assert url == "https://script.google.com/macros/s/abc/exec"
+        assert payload["id"] == 7
+        assert payload["contact"] == "a@test.de"
+        assert payload["name"] == "Anna"
+        assert payload["consent"] is True
+
+
+def test_send_to_sheet_logs_error_on_failure(monkeypatch, caplog):
+    monkeypatch.setattr(config, "SHEETS_WEBHOOK_URL", "https://script.google.com/exec")
+    with patch("notifier._post_json", side_effect=Exception("boom")):
+        import logging
+        with caplog.at_level(logging.ERROR, logger="notifier"):
+            notifier.send_to_sheet(1, "Klaus", "k@test.de", None, None, True)
+    assert "Failed to send lead" in caplog.text
