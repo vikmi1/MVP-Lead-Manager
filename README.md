@@ -1,8 +1,16 @@
 # Lead-Capture Service
 
-MVP-сервис для приёма заявок (лидов) от клиентов. Включает веб-форму для клиентов и страницу менеджера для просмотра и удаления заявок. Сохраняет в SQLite, уведомляет менеджера через лог и email.
+MVP-сервис для приёма заявок (лидов) от клиентов. Включает веб-форму для клиентов и страницу менеджера для просмотра, удаления и экспорта заявок. Сохраняет в SQLite, уведомляет менеджера через лог-файл и email, дублирует заявки в Google-таблицу.
 
 **Стек:** Python 3.11+, FastAPI, Pydantic v2, SQLite, Jinja2, uvicorn
+
+**Возможности:**
+- Веб-форма для клиента + страница менеджера
+- Хранение в SQLite
+- Уведомления: лог-файл, email менеджеру, автозапись в Google Sheets
+- Экспорт заявок в CSV и JSON
+- REST API с авторизацией по ключу
+- DSGVO: согласие, право на удаление, данные на своём сервере
 
 ---
 
@@ -28,7 +36,20 @@ cp .env.example .env
 python -c "import secrets; print(secrets.token_hex(32))"
 ```
 
-Вставить в `.env` как `API_KEY=...`. Заполнить SMTP-настройки для email-уведомлений (опционально).
+Вставить в `.env` как `API_KEY=...`.
+
+Переменные `.env`:
+
+| Переменная | Назначение | Обязательно |
+|---|---|---|
+| `API_KEY` | Ключ для защищённых эндпоинтов `/leads`, `/lead/{id}` | да |
+| `SMTP_HOST` / `SMTP_PORT` | SMTP-сервер (по умолчанию `smtp.gmail.com:587`) | для email |
+| `SMTP_USER` / `SMTP_PASS` | Логин и App Password почты-отправителя | для email |
+| `MANAGER_EMAIL` | Куда приходят уведомления о заявках | для email |
+| `SHEETS_WEBHOOK_URL` | URL Apps Script веб-приложения | для Google Sheets |
+| `DB_PATH` / `LOG_PATH` | Путь к базе и лог-файлу | нет (есть значения по умолчанию) |
+
+Email и Google Sheets опциональны: если переменные пустые, сервис просто пропускает эти уведомления. Настройка — в разделах ниже.
 
 ### 3. Запустить сервер
 
@@ -57,9 +78,64 @@ curl -X POST http://localhost:8000/lead \
 | Страница | Путь | Описание |
 |---|---|---|
 | Форма | `/` | Клиент вводит контакт, даёт согласие DSGVO |
-| Менеджер | `/admin` | Таблица заявок с кнопкой Löschen |
+| Менеджер | `/admin` | Таблица заявок, кнопка Löschen, кнопки экспорта CSV/JSON |
 
 Форма отправляет данные через JavaScript fetch(), без перезагрузки страницы. Кнопка «Löschen» на странице менеджера удаляет запись и обновляет таблицу.
+
+---
+
+## Экспорт данных
+
+На странице `/admin` есть кнопки «⬇ CSV» и «⬇ JSON» для выгрузки всех заявок.
+
+| Метод | Путь | Описание |
+|---|---|---|
+| GET | `/admin/export.csv` | Скачать все заявки в CSV (с BOM — корректные умляуты в Excel) |
+| GET | `/admin/export.json` | Скачать все заявки в JSON |
+
+---
+
+## Email-уведомления (Gmail)
+
+1. Включить **2-Step Verification** в Google-аккаунте отправителя
+2. Создать **App Password**: https://myaccount.google.com/apppasswords (16 символов)
+3. Заполнить в `.env`:
+   ```
+   SMTP_HOST=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_USER=твой@gmail.com
+   SMTP_PASS=<16-символьный App Password без пробелов>
+   MANAGER_EMAIL=куда-слать@gmail.com
+   ```
+4. Перезапустить сервер. При каждой новой заявке менеджеру уходит письмо «Neue Lead-Anfrage #N».
+
+Обычный пароль Gmail не подойдёт — нужен именно App Password.
+
+---
+
+## Google Sheets (Apps Script Webhook)
+
+1. Создать Google-таблицу с заголовками: `Datum | ID | Name | Kontakt | Betreff | Nachricht | Consent`
+2. **Расширения → Apps Script**, вставить код:
+   ```javascript
+   function doPost(e) {
+     var sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+     var data = JSON.parse(e.postData.contents);
+     sheet.appendRow([
+       new Date(), data.id, data.name, data.contact,
+       data.source, data.comment, data.consent
+     ]);
+     return ContentService
+       .createTextOutput(JSON.stringify({status: "ok"}))
+       .setMimeType(ContentService.MimeType.JSON);
+   }
+   ```
+3. **Развернуть → Новое развёртывание** → тип «Веб-приложение», доступ «Все»
+4. Скопировать URL (заканчивается на `/exec`) и вписать в `.env`:
+   ```
+   SHEETS_WEBHOOK_URL=https://script.google.com/macros/s/.../exec
+   ```
+5. Перезапустить сервер. Каждая заявка автоматически добавляется строкой в таблицу.
 
 ---
 
@@ -89,7 +165,7 @@ curl -X POST http://localhost:8000/lead \
 pytest -v
 ```
 
-44 теста: модели, база данных, авторизация, уведомления, API-роуты, UI-страницы.
+51 тест: модели, база данных, авторизация, уведомления (лог/email/Sheets), API-роуты, UI-страницы, экспорт CSV/JSON.
 
 ---
 
@@ -102,3 +178,4 @@ pytest -v
 - Хостинг только на серверах в Германии / ЕС (Hetzner, STRATO, netcup)
 - HTTPS обязателен при деплое (Let's Encrypt)
 - Ссылка на Datenschutzerklärung должна быть рядом с формой на сайте клиента
+- ⚠️ При включённой интеграции с Google Sheets данные заявок передаются на серверы Google (США). Для строгого DSGVO это нужно отразить в Datenschutzerklärung или отключить интеграцию (оставить `SHEETS_WEBHOOK_URL` пустым)
