@@ -1,0 +1,79 @@
+### 1. Успешная заявка — все поля
+POST http://localhost:8000/lead
+Content-Type: application/json
+
+{
+  "name": "Klaus Müller",
+  "contact": "k.mueller@email.de",
+  "source": "Probefahrt-Formular",
+  "comment": "Interessiert an VW Tiguan 2024, Mo-Fr",
+  "consent": true
+}
+
+###
+
+### 2. Успешная заявка — только обязательные поля
+POST http://localhost:8000/lead
+Content-Type: application/json
+
+{
+  "contact": "anna.schmidt@gmail.com",
+  "consent": true
+}
+
+###
+
+### 3. Ошибка 422 — нет поля contact
+POST http://localhost:8000/lead
+Content-Type: application/json
+
+{
+  "name": "Hans",
+  "consent": true
+}
+
+###
+
+### 4. Ошибка 422 — consent = false (DSGVO не принято)
+POST http://localhost:8000/lead
+Content-Type: application/json
+
+{
+  "contact": "hans@test.de",
+  "consent": false
+}
+
+###
+
+### 5. Получить все лиды (заменить YOUR_API_KEY)
+GET http://localhost:8000/leads
+X-API-Key: YOUR_API_KEY
+
+###
+
+### 6. Получить лиды с пагинацией
+GET http://localhost:8000/leads?limit=10&offset=0
+X-API-Key: YOUR_API_KEY
+
+###
+
+### 7. Ошибка 401 — неверный API-ключ
+GET http://localhost:8000/leads
+X-API-Key: wrong-key
+
+###
+
+### 8. Удалить лид (заменить ID и YOUR_API_KEY)
+DELETE http://localhost:8000/lead/1
+X-API-Key: YOUR_API_KEY
+
+###
+
+### 9. Ошибка 404 — лид не найден
+DELETE http://localhost:8000/lead/99999
+X-API-Key: YOUR_API_KEY
+
+###
+
+### 10. Ошибка 422 — нет заголовка X-API-Key
+GET http://localhost:8000/leads
