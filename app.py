@@ -75,13 +75,13 @@ def delete_lead(lead_id: int, _: str = Depends(verify_api_key)):
 
 @app.get("/", include_in_schema=False)
 def form_page(request: Request):
-    return templates.TemplateResponse("form.html", {"request": request})
+    return templates.TemplateResponse(request, "form.html")
 
 
 @app.get("/admin", include_in_schema=False)
 def admin_page(request: Request):
     leads = database.get_leads(config.DB_PATH)
-    return templates.TemplateResponse("admin.html", {"request": request, "leads": leads})
+    return templates.TemplateResponse(request, "admin.html", {"leads": leads})
 
 
 @app.post("/admin/delete/{lead_id}", include_in_schema=False)
