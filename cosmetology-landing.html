@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elena Bergmann — Kosmetikstudio Frankfurt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --rose:        #b5686e;
+  --rose-light:  #f2e4e1;
+  --rose-mid:    #d4a0a4;
+  --cream:       #faf8f5;
+  --cream-2:     #f5f0ea;
+  --cream-3:     #ede7df;
+  --text:        #2e2220;
+  --text-mid:    #6b5c59;
+  --text-muted:  #a09490;
+  --white:       #ffffff;
+  --border:      #e8dfd8;
+  --gold:        #c09060;
+  --radius-sm:   6px;
+  --radius-md:   12px;
+  --radius-lg:   20px;
+  --radius-xl:   32px;
+  --font-serif:  'Cormorant Garamond', Georgia, serif;
+  --font-sans:   'Inter', system-ui, sans-serif;
+  --shadow-sm:   0 1px 3px rgba(46,34,32,.06);
+  --shadow-md:   0 4px 16px rgba(46,34,32,.08);
+  --shadow-lg:   0 12px 40px rgba(46,34,32,.10);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-sans); background: var(--cream); color: var(--text); line-height: 1.65; }
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+
+/* ── NAV ───────────────────────────────────────────────────────── */
+nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(250,248,245,.92); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+}
+.nav-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 64px;
+}
+.nav-logo {
+  font-family: var(--font-serif); font-size: 1.35rem; font-weight: 400;
+  letter-spacing: .02em; color: var(--text);
+}
+.nav-logo span { color: var(--rose); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a {
+  font-size: .8rem; font-weight: 500; letter-spacing: .06em;
+  text-transform: uppercase; color: var(--text-mid);
+  transition: color 180ms;
+}
+.nav-links a:hover { color: var(--rose); }
+.nav-cta {
+  font-size: .8rem; font-weight: 500; letter-spacing: .05em;
+  text-transform: uppercase; padding: .5rem 1.25rem;
+  border: 1px solid var(--rose); border-radius: 100px;
+  color: var(--rose); transition: all 180ms;
+}
+.nav-cta:hover { background: var(--rose); color: var(--white); }
+
+/* ── HERO ──────────────────────────────────────────────────────── */
+.hero {
+  max-width: 1100px; margin: 0 auto;
+  padding: 6rem 2rem 5rem;
+  display: grid; grid-template-columns: 1fr 420px; gap: 4rem; align-items: center;
+}
+.hero-eyebrow {
+  font-size: .75rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--rose); margin-bottom: 1.25rem;
+  display: flex; align-items: center; gap: .6rem;
+}
+.hero-eyebrow::after {
+  content: ''; flex: 1; height: 1px; background: var(--rose-mid); max-width: 60px;
+}
+.hero h1 {
+  font-family: var(--font-serif); font-size: clamp(2.8rem, 5vw, 4.5rem);
+  font-weight: 300; line-height: 1.1; margin-bottom: 1.5rem;
+  color: var(--text);
+}
+.hero h1 em { font-style: italic; color: var(--rose); }
+.hero-lead {
+  font-size: 1rem; color: var(--text-mid); max-width: 42ch;
+  margin-bottom: 2.5rem; line-height: 1.75;
+}
+.hero-actions { display: flex; align-items: center; gap: 1.25rem; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: .5rem;
+  background: var(--rose); color: var(--white);
+  font-size: .85rem; font-weight: 500; letter-spacing: .04em;
+  padding: .85rem 2rem; border-radius: 100px;
+  border: none; cursor: pointer; transition: all 200ms;
+  text-decoration: none;
+}
+.btn-primary:hover { background: #9e5459; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.btn-outline {
+  font-size: .85rem; font-weight: 500; color: var(--text-mid);
+  letter-spacing: .03em; display: flex; align-items: center; gap: .35rem;
+  transition: color 180ms;
+}
+.btn-outline:hover { color: var(--rose); }
+.hero-stat-row {
+  display: flex; gap: 2rem; margin-top: 3rem; padding-top: 2.5rem;
+  border-top: 1px solid var(--cream-3); flex-wrap: wrap;
+}
+.hero-stat-num {
+  font-family: var(--font-serif); font-size: 2rem; font-weight: 300;
+  color: var(--text); line-height: 1;
+}
+.hero-stat-label { font-size: .75rem; color: var(--text-muted); margin-top: .25rem; }
+
+/* Hero image placeholder */
+.hero-photo {
+  position: relative; border-radius: var(--radius-xl);
+  overflow: hidden; aspect-ratio: 4/5;
+  background: var(--rose-light);
+}
+.hero-photo-img {
+  width: 100%; height: 100%; object-fit: cover;
+  font-size: .8rem; color: var(--text-muted);
+  display: flex; align-items: center; justify-content: center;
+}
+.hero-badge {
+  position: absolute; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+  background: var(--white); border-radius: 100px; padding: .6rem 1.25rem;
+  box-shadow: var(--shadow-md); white-space: nowrap;
+  display: flex; align-items: center; gap: .5rem;
+  font-size: .8rem; color: var(--text-mid); font-weight: 500;
+}
+.hero-badge-dot { width: 8px; height: 8px; border-radius: 50%; background: #6bc47a; flex-shrink: 0; }
+
+/* ── SECTION BASE ──────────────────────────────────────────────── */
+section { padding: 5rem 2rem; }
+.section-inner { max-width: 1100px; margin: 0 auto; }
+.section-tag {
+  font-size: .7rem; font-weight: 600; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--rose);
+  margin-bottom: .75rem;
+}
+.section-h2 {
+  font-family: var(--font-serif); font-size: clamp(1.8rem, 3vw, 2.75rem);
+  font-weight: 300; line-height: 1.2; color: var(--text);
+  margin-bottom: 1rem;
+}
+.section-sub { font-size: .95rem; color: var(--text-mid); max-width: 56ch; line-height: 1.7; }
+
+/* ── SERVICES ──────────────────────────────────────────────────── */
+#leistungen { background: var(--white); }
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.25rem; margin-top: 3rem;
+}
+.service-card {
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.75rem;
+  transition: all 220ms;
+}
+.service-card:hover {
+  border-color: var(--rose-mid); transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+.service-icon {
+  width: 48px; height: 48px; border-radius: var(--radius-md);
+  background: var(--rose-light); color: var(--rose);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem; margin-bottom: 1.25rem;
+}
+.service-card h3 {
+  font-family: var(--font-serif); font-size: 1.2rem; font-weight: 400;
+  color: var(--text); margin-bottom: .5rem;
+}
+.service-card p { font-size: .85rem; color: var(--text-mid); line-height: 1.65; }
+.service-price {
+  margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--cream-3);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.service-price-num {
+  font-family: var(--font-serif); font-size: 1.3rem; font-weight: 400; color: var(--text);
+}
+.service-price-time { font-size: .75rem; color: var(--text-muted); }
+
+/* ── ABOUT ─────────────────────────────────────────────────────── */
+#uber-mich {
+  background: var(--cream-2);
+}
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5rem; align-items: center; margin-top: 1rem;
+}
+.about-photo {
+  aspect-ratio: 3/4; border-radius: var(--radius-xl);
+  background: linear-gradient(160deg, var(--rose-light), var(--cream-3));
+  overflow: hidden; position: relative;
+}
+.about-photo-inner {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-serif); font-size: 1rem; color: var(--text-muted);
+  font-style: italic;
+}
+.about-quote {
+  font-family: var(--font-serif); font-size: clamp(1.3rem, 2.2vw, 1.75rem);
+  font-weight: 300; font-style: italic; line-height: 1.5;
+  color: var(--text); margin-bottom: 1.5rem;
+}
+.about-quote::before { content: '\201C'; color: var(--rose-mid); }
+.about-quote::after  { content: '\201D'; color: var(--rose-mid); }
+.about-body { font-size: .9rem; color: var(--text-mid); line-height: 1.8; margin-bottom: 1.75rem; }
+.cert-list { display: flex; flex-direction: column; gap: .6rem; }
+.cert-item {
+  display: flex; align-items: center; gap: .75rem;
+  font-size: .83rem; color: var(--text-mid);
+}
+.cert-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--rose); flex-shrink: 0;
+}
+
+/* ── TESTIMONIALS ──────────────────────────────────────────────── */
+#bewertungen { background: var(--white); }
+.reviews-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem; margin-top: 3rem;
+}
+.review-card {
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); padding: 1.5rem;
+}
+.review-stars { color: var(--gold); font-size: .85rem; letter-spacing: .15em; margin-bottom: .75rem; }
+.review-text { font-size: .88rem; color: var(--text-mid); line-height: 1.7; margin-bottom: 1.25rem; font-style: italic; }
+.review-author { display: flex; align-items: center; gap: .75rem; }
+.review-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: var(--rose-light); display: flex; align-items: center; justify-content: center;
+  font-size: .75rem; font-weight: 600; color: var(--rose);
+}
+.review-name { font-size: .8rem; font-weight: 500; color: var(--text); }
+.review-date { font-size: .72rem; color: var(--text-muted); }
+
+/* ── FORM SECTION ──────────────────────────────────────────────── */
+#kontakt { background: var(--cream-2); }
+.form-layout {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 4rem; align-items: start; margin-top: 2.5rem;
+}
+.form-info-list { margin-top: 2rem; display: flex; flex-direction: column; gap: 1.25rem; }
+.form-info-item { display: flex; align-items: flex-start; gap: 1rem; }
+.form-info-icon {
+  width: 40px; height: 40px; border-radius: var(--radius-md);
+  background: var(--rose-light); color: var(--rose);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 1rem;
+}
+.form-info-item h4 { font-size: .85rem; font-weight: 600; color: var(--text); margin-bottom: .2rem; }
+.form-info-item p { font-size: .82rem; color: var(--text-mid); line-height: 1.5; }
+
+/* Form card */
+.form-card {
+  background: var(--white); border: 1px solid var(--border);
+  border-radius: var(--radius-xl); padding: 2.5rem;
+  box-shadow: var(--shadow-md);
+}
+.form-card-title {
+  font-family: var(--font-serif); font-size: 1.5rem; font-weight: 400;
+  color: var(--text); margin-bottom: .4rem;
+}
+.form-card-sub { font-size: .83rem; color: var(--text-muted); margin-bottom: 2rem; }
+.form-group { margin-bottom: 1.25rem; }
+.form-group label {
+  display: block; font-size: .75rem; font-weight: 600; letter-spacing: .04em;
+  text-transform: uppercase; color: var(--text-mid); margin-bottom: .45rem;
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%; padding: .75rem 1rem;
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: var(--radius-md); font-family: var(--font-sans);
+  font-size: .9rem; color: var(--text);
+  transition: border-color 180ms, box-shadow 180ms;
+  outline: none; appearance: none;
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--text-muted); }
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--rose-mid);
+  box-shadow: 0 0 0 3px rgba(181,104,110,.12);
+  background: var(--white);
+}
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23a09490' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 1rem center;
+  cursor: pointer;
+}
+.form-group textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.consent-wrap {
+  display: flex; align-items: flex-start; gap: .75rem;
+  padding: 1rem; background: var(--cream); border-radius: var(--radius-md);
+  border: 1px solid var(--border); margin-bottom: 1.5rem;
+}
+.consent-wrap input[type="checkbox"] {
+  width: 18px; height: 18px; flex-shrink: 0; margin-top: .1rem;
+  accent-color: var(--rose); cursor: pointer;
+}
+.consent-wrap label {
+  font-size: .78rem; color: var(--text-mid); line-height: 1.55;
+  cursor: pointer;
+}
+.consent-wrap a { color: var(--rose); text-decoration: underline; }
+.form-submit {
+  width: 100%; padding: .9rem;
+  background: var(--rose); color: var(--white);
+  font-family: var(--font-sans); font-size: .88rem; font-weight: 500;
+  letter-spacing: .04em; border: none; border-radius: 100px;
+  cursor: pointer; transition: all 200ms;
+}
+.form-submit:hover { background: #9e5459; transform: translateY(-1px); box-shadow: var(--shadow-md); }
+.form-submit:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+.form-msg {
+  display: none; margin-top: 1rem; padding: .9rem 1rem;
+  border-radius: var(--radius-md); font-size: .85rem; font-weight: 500;
+  text-align: center;
+}
+.form-msg.success {
+  background: #edf6e8; border: 1px solid #b8d9a8; color: #3a6320;
+}
+.form-msg.error {
+  background: #fceae8; border: 1px solid #f0b4ae; color: #8c2c27;
+}
+
+/* ── FOOTER ────────────────────────────────────────────────────── */
+footer {
+  background: var(--text); color: rgba(250,248,245,.65);
+  padding: 3rem 2rem;
+}
+.footer-inner {
+  max-width: 1100px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 1.5rem;
+}
+.footer-logo {
+  font-family: var(--font-serif); font-size: 1.2rem; font-weight: 300;
+  color: rgba(250,248,245,.9);
+}
+.footer-links { display: flex; gap: 1.75rem; list-style: none; flex-wrap: wrap; }
+.footer-links a { font-size: .78rem; color: rgba(250,248,245,.5); transition: color 180ms; }
+.footer-links a:hover { color: var(--rose-mid); }
+.footer-copy { font-size: .75rem; color: rgba(250,248,245,.35); }
+
+/* ── RESPONSIVE ────────────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; padding: 4rem 1.5rem; }
+  .hero-photo { display: none; }
+  .about-grid { grid-template-columns: 1fr; }
+  .about-photo { aspect-ratio: 16/7; }
+  .form-layout { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+@media (max-width: 600px) {
+  section { padding: 3.5rem 1.25rem; }
+  .form-card { padding: 1.75rem 1.25rem; }
+  .hero-stat-row { gap: 1.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">Elena <span>Bergmann</span></div>
+    <ul class="nav-links">
+      <li><a href="#leistungen">Leistungen</a></li>
+      <li><a href="#uber-mich">Über mich</a></li>
+      <li><a href="#bewertungen">Bewertungen</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <a href="#kontakt" class="nav-cta">Termin buchen</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero" id="start">
+  <div class="hero-text">
+    <div class="hero-eyebrow">Kosmetikstudio Frankfurt · Sachsenhausen</div>
+    <h1>Schönheit, <em>die</em><br>von innen<br>strahlt</h1>
+    <p class="hero-lead">
+      Professionelle Gesichts- und Körperpflege, abgestimmt auf Ihren Hauttyp.
+      Erleben Sie sichtbare Ergebnisse und nachhaltige Verwöhnmomente in einer ruhigen Atmosphäre.
+    </p>
+    <div class="hero-actions">
+      <a href="#kontakt" class="btn-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+        Jetzt Termin anfragen
+      </a>
+      <a href="#leistungen" class="btn-outline">
+        Alle Leistungen ansehen
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="hero-stat-row">
+      <div>
+        <div class="hero-stat-num">12+</div>
+        <div class="hero-stat-label">Jahre Erfahrung</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">800+</div>
+        <div class="hero-stat-label">zufriedene Kunden</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">4,9 ★</div>
+        <div class="hero-stat-label">Bewertungen Google</div>
+      </div>
+    </div>
+  </div>
+  <div class="hero-photo">
+    <div class="hero-photo-inner">
+      <div style="text-align:center; padding: 2rem;">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(176,104,110,.4)" stroke-width="1.2" style="margin: 0 auto 1rem;" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
+        </svg>
+        <div style="font-family:'Cormorant Garamond',serif; font-style:italic; color:rgba(46,34,32,.35); font-size:.95rem;">Foto des Kosmetikstudios</div>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <div class="hero-badge-dot"></div>
+      Mo–Sa · 9:00 – 19:00 Uhr
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="leistungen">
+  <div class="section-inner">
+    <div class="section-tag">Leistungen</div>
+    <h2 class="section-h2">Was ich für Sie tue</h2>
+    <p class="section-sub">Von der klassischen Gesichtsbehandlung bis zur modernen Meso-Therapie — individuell, effektiv und mit Herz.</p>
+
+    <div class="services-grid">
+
+      <div class="service-card">
+        <div class="service-icon" aria-hidden="true">✦</div>
+        <h3>Gesichtsbehandlung Classic</h3>
+        <p>Tiefenreinigung, Peeling und Aufbaumaske. Ideal für regelmäßige Pflege — sichtbar frisches Hautbild nach der ersten Anwendung.</p>
+        <div class="service-price">
+          <div class="service-price-num">ab 65 €</div>
+          <div class="service-price-time">60 min</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon" aria-hidden="true">◈</div>
+        <h3>Anti-Aging Behandlung</h3>
+        <p>Hyaluron-Booster, Lifting-Massagen und Wirkstoffampullen gegen feine Linien. Klinisch getestete Produkte der Marken Dermalogica und Babor.</p>
+        <div class="service-price">
+          <div class="service-price-num">ab 95 €</div>
+          <div class="service-price-time">75 min</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon" aria-hidden="true">◇</div>
+        <h3>Meso-Therapie (nicht-invasiv)</h3>
+        <p>Elektroporation und Mesoporation transportieren Wirkstoffe direkt in die Dermis — ohne Nadeln, ohne Ausfallzeit.</p>
+        <div class="service-price">
+          <div class="service-price-num">ab 110 €</div>
+          <div class="service-price-time">60 min</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon" aria-hidden="true">⬡</div>
+        <h3>Chemisches Peeling</h3>
+        <p>Fruchtsäure- und BHA-Peelings für glattere Textur, gleichmäßiges Teint und verfeinerte Poren. Auch für empfindliche Haut geeignet.</p>
+        <div class="service-price">
+          <div class="service-price-num">ab 80 €</div>
+          <div class="service-price-time">50 min</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon" aria-hidden="true">✿</div>
+        <h3>Augenbrauen & Wimpern</h3>
+        <p>Brow Lifting, Tinting, Laminierung und Wimpernwelle. Frischer Blick ohne Make-up — hält bis zu 6 Wochen.</p>
+        <div class="service-price">
+          <div class="service-price-num">ab 45 €</div>
+          <div class="service-price-time">45 min</div>
+        </div>
+      </div>
+
+      <div class="service-card">
+        <div class="service-icon" aria-hidden="true">❧</div>
+        <h3>Ganzheitliches Wellness-Paket</h3>
+        <p>Gesicht + Rücken + Kopfmassage. Das perfekte Geschenk oder eine Auszeit vom Alltag — mit Kräutertee und Aromatherapie.</p>
+        <div class="service-price">
+          <div class="service-price-num">ab 145 €</div>
+          <div class="service-price-time">120 min</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="uber-mich">
+  <div class="section-inner">
+    <div class="about-grid">
+      <div class="about-photo">
+        <div class="about-photo-inner">Foto · Elena Bergmann</div>
+      </div>
+      <div class="about-content">
+        <div class="section-tag">Über mich</div>
+        <h2 class="section-h2">Jede Haut<br>hat ihre Geschichte</h2>
+        <div class="about-quote">Ich behandle keine Hautprobleme — ich begleite Menschen zu ihrer besten Haut.</div>
+        <p class="about-body">
+          Seit über 12 Jahren bin ich leidenschaftliche Kosmetikerin in Frankfurt. Mein Ansatz verbindet evidenzbasierte Wirkstoffe mit ganzheitlicher Hautpflege — ohne Versprechen, die ich nicht halten kann.<br><br>
+          Jede Behandlung beginnt mit einer ausführlichen Hautanalyse. Ich nehme mir die Zeit, Ihre Haut und Ihre Ziele wirklich zu verstehen — denn was bei einer Kundin wirkt, muss bei der nächsten nicht dasselbe sein.
+        </p>
+        <div class="cert-list">
+          <div class="cert-item"><span class="cert-dot"></span>Staatlich geprüfte Kosmetikerin (HWK Frankfurt)</div>
+          <div class="cert-item"><span class="cert-dot"></span>Dermalogica Face Mapping Certified</div>
+          <div class="cert-item"><span class="cert-dot"></span>Babor Premium Partner seit 2018</div>
+          <div class="cert-item"><span class="cert-dot"></span>Weiterbildung Meso-Therapie, München 2022</div>
+          <div class="cert-item"><span class="cert-dot"></span>Mitglied im Deutschen Kosmetikverband (DKV)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REVIEWS -->
+<section id="bewertungen">
+  <div class="section-inner">
+    <div class="section-tag">Bewertungen</div>
+    <h2 class="section-h2">Was Kundinnen sagen</h2>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Ich bin wirklich begeistert. Nach nur zwei Anti-Aging-Behandlungen sah meine Haut straffer und frischer aus. Elena nimmt sich viel Zeit und erklärt alles ganz genau."</p>
+        <div class="review-author">
+          <div class="review-avatar">SK</div>
+          <div>
+            <div class="review-name">Sandra K.</div>
+            <div class="review-date">Google · Mai 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Endlich eine Kosmetikerin, die wirklich zuhört. Das Wellness-Paket war das perfekte Geburtstagsgeschenk für meine Mutter — sie war absolut überwältigt."</p>
+        <div class="review-author">
+          <div class="review-avatar">MR</div>
+          <div>
+            <div class="review-name">Maria R.</div>
+            <div class="review-date">Google · April 2026</div>
+          </div>
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-stars">★★★★★</div>
+        <p class="review-text">„Das chemische Peeling hat meine Haut komplett verwandelt. Rötungen weg, Poren kleiner, Teint gleichmäßig. Ich komme seit 3 Jahren regelmäßig — und würde es nie ändern."</p>
+        <div class="review-author">
+          <div class="review-avatar">LP</div>
+          <div>
+            <div class="review-name">Laura P.</div>
+            <div class="review-date">Google · März 2026</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM / CONTACT -->
+<section id="kontakt">
+  <div class="section-inner">
+    <div class="form-layout">
+
+      <!-- Left info column -->
+      <div>
+        <div class="section-tag">Kontakt</div>
+        <h2 class="section-h2">Ich freue mich<br>auf Sie</h2>
+        <p class="section-sub">Schreiben Sie mir kurz — ich melde mich innerhalb von 24 Stunden mit Terminvorschlägen.</p>
+        <div class="form-info-list">
+          <div class="form-info-item">
+            <div class="form-info-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
+            <div>
+              <h4>Adresse</h4>
+              <p>Schweizer Str. 48 · 60594 Frankfurt am Main<br>U-Bahn Schweizer Platz (U1/U2/U3)</p>
+            </div>
+          </div>
+          <div class="form-info-item">
+            <div class="form-info-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+            </div>
+            <div>
+              <h4>Öffnungszeiten</h4>
+              <p>Montag – Freitag 9:00 – 19:00<br>Samstag 9:00 – 15:00 · Sonntag geschlossen</p>
+            </div>
+          </div>
+          <div class="form-info-item">
+            <div class="form-info-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.86 19.86 0 0 1 3.08 4.18 2 2 0 0 1 5.07 2h3a2 2 0 0 1 2 1.72c.127.96.362 1.903.7 2.81a2 2 0 0 1-.45 2.11L9.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0 1 23 16.92z"/></svg>
+            </div>
+            <div>
+              <h4>Telefon & E-Mail</h4>
+              <p>+49 69 123 456 78<br>hallo@elena-bergmann-kosmetik.de</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right form column -->
+      <div class="form-card">
+        <div class="form-card-title">Terminanfrage</div>
+        <div class="form-card-sub">Alle Felder außer Name und Nachricht sind optional.</div>
+
+        <form id="leadForm" novalidate>
+          <div class="form-row">
+            <div class="form-group">
+              <label for="f-name">Ihr Name</label>
+              <input type="text" id="f-name" name="name" placeholder="Maria Müller" autocomplete="name">
+            </div>
+            <div class="form-group">
+              <label for="f-contact">E-Mail oder Telefon <span style="color:var(--rose)">*</span></label>
+              <input type="text" id="f-contact" name="contact" placeholder="name@email.de" required autocomplete="email">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="f-source">Gewünschte Leistung</label>
+            <select id="f-source" name="source">
+              <option value="">Bitte wählen …</option>
+              <option value="Gesichtsbehandlung Classic">Gesichtsbehandlung Classic</option>
+              <option value="Anti-Aging Behandlung">Anti-Aging Behandlung</option>
+              <option value="Meso-Therapie">Meso-Therapie (nicht-invasiv)</option>
+              <option value="Chemisches Peeling">Chemisches Peeling</option>
+              <option value="Augenbrauen & Wimpern">Augenbrauen &amp; Wimpern</option>
+              <option value="Wellness-Paket">Ganzheitliches Wellness-Paket</option>
+              <option value="Beratung">Nur Beratung / noch unsicher</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="f-comment">Nachricht (optional)</label>
+            <textarea id="f-comment" name="comment" placeholder="Wunschtermin, Fragen zur Behandlung …"></textarea>
+          </div>
+
+          <div class="consent-wrap">
+            <input type="checkbox" id="f-consent" required>
+            <label for="f-consent">
+              Ich bin einverstanden, dass meine Angaben zur Terminbuchung gespeichert und verarbeitet werden.
+              Weitere Informationen finden Sie in unserer <a href="#" onclick="return false;">Datenschutzerklärung</a>.
+              Die Einwilligung kann jederzeit widerrufen werden.
+            </label>
+          </div>
+
+          <button type="submit" class="form-submit" id="submitBtn">
+            Anfrage absenden
+          </button>
+          <div class="form-msg" id="formMsg"></div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">Elena Bergmann Kosmetik</div>
+    <ul class="footer-links">
+      <li><a href="#">Impressum</a></li>
+      <li><a href="#">Datenschutzerklärung</a></li>
+      <li><a href="#">AGB</a></li>
+      <li><a href="#kontakt">Kontakt</a></li>
+    </ul>
+    <div class="footer-copy">© 2026 Elena Bergmann · Frankfurt am Main</div>
+  </div>
+</footer>
+
+<script>
+document.getElementById('leadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('formMsg');
+  const contact = document.getElementById('f-contact').value.trim();
+  const consent = document.getElementById('f-consent').checked;
+
+  msg.style.display = 'none';
+  msg.className = 'form-msg';
+
+  if (!contact) {
+    msg.textContent = 'Bitte geben Sie Ihre E-Mail-Adresse oder Telefonnummer an.';
+    msg.classList.add('error');
+    msg.style.display = 'block';
+    document.getElementById('f-contact').focus();
+    return;
+  }
+  if (!consent) {
+    msg.textContent = 'Bitte stimmen Sie der Datenschutzerklärung zu.';
+    msg.classList.add('error');
+    msg.style.display = 'block';
+    return;
+  }
+
+  const payload = {
+    name:    document.getElementById('f-name').value.trim() || null,
+    contact: contact,
+    source:  document.getElementById('f-source').value || null,
+    comment: document.getElementById('f-comment').value.trim() || null,
+    consent: true
+  };
+
+  btn.disabled = true;
+  btn.textContent = 'Wird gesendet …';
+
+  try {
+    const res = await fetch('http://localhost:8000/lead', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (res.ok) {
+      msg.textContent = 'Vielen Dank! Wir melden uns innerhalb von 24 Stunden bei Ihnen.';
+      msg.classList.add('success');
+      document.getElementById('leadForm').reset();
+      btn.textContent = 'Anfrage gesendet ✓';
+    } else {
+      const data = await res.json().catch(() => ({}));
+      msg.textContent = data.detail || 'Es ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.';
+      msg.classList.add('error');
+      btn.disabled = false;
+      btn.textContent = 'Anfrage absenden';
+    }
+  } catch (err) {
+    msg.textContent = 'Verbindung zum Server nicht möglich. Bitte rufen Sie uns direkt an.';
+    msg.classList.add('error');
+    btn.disabled = false;
+    btn.textContent = 'Anfrage absenden';
+  }
+
+  msg.style.display = 'block';
+});
+</script>
+
+</body>
+</html>

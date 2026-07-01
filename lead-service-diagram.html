@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lead-сервис для Autohaus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root,[data-theme="light"]{
+  --color-bg:#f7f6f2;--color-surface:#f9f8f5;--color-surface-2:#fbfbf9;
+  --color-surface-offset:#f3f0ec;--color-divider:#dcd9d5;--color-border:#d4d1ca;
+  --color-text:#28251d;--color-text-muted:#7a7974;--color-text-faint:#bab9b4;
+  --color-primary:#01696f;--color-primary-hover:#0c4e54;
+  --color-primary-highlight:#cedcd8;
+  --color-success:#437a22;--color-success-highlight:#d4dfcc;
+  --color-warning:#964219;--color-warning-highlight:#ddcfc6;
+  --color-error:#a12c7b;--color-error-highlight:#e0ced7;
+  --color-blue:#006494;--color-blue-highlight:#c6d8e4;
+  --color-orange:#da7101;--color-orange-highlight:#e7d7c4;
+  --color-gold:#d19900;--color-gold-highlight:#e9e0c6;
+  --shadow-sm:0 1px 2px oklch(0.2 0.01 80/0.06);
+  --shadow-md:0 4px 12px oklch(0.2 0.01 80/0.08);
+  --shadow-lg:0 12px 32px oklch(0.2 0.01 80/0.12);
+  --radius-sm:0.375rem;--radius-md:0.5rem;--radius-lg:0.75rem;--radius-xl:1rem;
+  --font-body:'Inter','Helvetica Neue',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --text-xs:clamp(0.75rem,0.7rem + 0.25vw,0.875rem);
+  --text-sm:clamp(0.875rem,0.8rem + 0.35vw,1rem);
+  --text-base:clamp(1rem,0.95rem + 0.25vw,1.125rem);
+  --text-lg:clamp(1.125rem,1rem + 0.75vw,1.5rem);
+  --text-xl:clamp(1.5rem,1.2rem + 1.25vw,2.25rem);
+}
+[data-theme="dark"]{
+  --color-bg:#171614;--color-surface:#1c1b19;--color-surface-2:#201f1d;
+  --color-surface-offset:#1d1c1a;--color-divider:#262523;--color-border:#393836;
+  --color-text:#cdccca;--color-text-muted:#797876;--color-text-faint:#5a5957;
+  --color-primary:#4f98a3;--color-primary-hover:#227f8b;
+  --color-primary-highlight:#313b3b;
+  --color-success:#6daa45;--color-success-highlight:#3a4435;
+  --color-warning:#bb653b;--color-warning-highlight:#564942;
+  --color-error:#d163a7;--color-error-highlight:#4c3d46;
+  --color-blue:#5591c7;--color-blue-highlight:#3a4550;
+  --color-orange:#fdab43;--color-orange-highlight:#564b3e;
+  --color-gold:#e8af34;--color-gold-highlight:#4d4332;
+  --shadow-sm:0 1px 2px oklch(0 0 0/0.2);
+  --shadow-md:0 4px 12px oklch(0 0 0/0.3);
+  --shadow-lg:0 12px 32px oklch(0 0 0/0.4);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+body{min-height:100dvh;font-family:var(--font-body);font-size:var(--text-base);
+  color:var(--color-text);background:var(--color-bg);line-height:1.6;padding:var(--space,2rem)}
+h1,h2,h3,h4{text-wrap:balance;line-height:1.2}
+p,li{text-wrap:pretty;max-width:72ch}
+
+/* Layout */
+.page{max-width:1100px;margin:0 auto;padding:2rem 1.5rem}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:2.5rem;flex-wrap:wrap;gap:1rem}
+.header-left{display:flex;align-items:center;gap:1rem}
+.logo{display:flex;align-items:center;gap:.75rem}
+.logo-icon{width:40px;height:40px;flex-shrink:0}
+.site-title{font-size:var(--text-lg);font-weight:700;color:var(--color-text)}
+.site-sub{font-size:var(--text-xs);color:var(--color-text-muted)}
+.theme-btn{background:none;border:1px solid var(--color-border);border-radius:var(--radius-md);
+  padding:.4rem .7rem;cursor:pointer;color:var(--color-text-muted);font-size:var(--text-xs);
+  transition:all 180ms cubic-bezier(0.16,1,0.3,1)}
+.theme-btn:hover{border-color:var(--color-primary);color:var(--color-primary)}
+
+/* Section headings */
+.section-label{font-size:var(--text-xs);font-weight:600;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--color-text-muted);margin-bottom:.5rem}
+.section-title{font-size:var(--text-lg);font-weight:700;margin-bottom:1.5rem;color:var(--color-text)}
+
+/* Business card */
+.client-card{background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);padding:1.5rem;margin-bottom:2.5rem;
+  box-shadow:var(--shadow-sm);display:flex;align-items:flex-start;gap:1.25rem;flex-wrap:wrap}
+.client-icon{width:56px;height:56px;border-radius:var(--radius-lg);
+  background:var(--color-blue-highlight);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.client-icon svg{color:var(--color-blue)}
+.client-info h2{font-size:var(--text-lg);font-weight:700;margin-bottom:.25rem}
+.client-info p{font-size:var(--text-sm);color:var(--color-text-muted)}
+.client-stats{display:flex;gap:1rem;margin-top:.75rem;flex-wrap:wrap}
+.stat-chip{background:var(--color-surface-offset);border-radius:var(--radius-full);
+  padding:.25rem .75rem;font-size:var(--text-xs);color:var(--color-text-muted)}
+.stat-chip strong{color:var(--color-text)}
+
+/* Flow diagram */
+.flow{display:flex;flex-direction:column;gap:0;margin-bottom:2.5rem}
+.flow-step{display:grid;grid-template-columns:40px 1fr;gap:0 1rem;align-items:start}
+.flow-line{display:flex;flex-direction:column;align-items:center}
+.flow-dot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-weight:700;font-size:var(--text-sm);flex-shrink:0;
+  color:#fff;position:relative;z-index:1}
+.flow-connector{width:2px;flex:1;min-height:32px;background:var(--color-divider);margin:.25rem 0}
+.flow-content{padding:.5rem 0 1.5rem 0}
+.flow-content h3{font-size:var(--text-base);font-weight:600;margin-bottom:.4rem}
+.flow-content p{font-size:var(--text-sm);color:var(--color-text-muted);margin-bottom:.6rem}
+.flow-box{background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:1rem 1.25rem;box-shadow:var(--shadow-sm)}
+.flow-box.input-box{border-color:oklch(from var(--color-blue) l c h / 0.3);background:var(--color-blue-highlight)}
+.flow-box.process-box{border-color:oklch(from var(--color-primary) l c h / 0.3);background:var(--color-primary-highlight)}
+.flow-box.output-box{border-color:oklch(from var(--color-success) l c h / 0.3);background:var(--color-success-highlight)}
+.flow-box.error-box{border-color:oklch(from var(--color-warning) l c h / 0.3);background:var(--color-warning-highlight)}
+
+.tag-list{display:flex;flex-wrap:wrap;gap:.4rem;margin-top:.6rem}
+.tag{border-radius:var(--radius-sm);padding:.2rem .6rem;font-size:var(--text-xs);font-weight:500}
+.tag-blue{background:var(--color-blue-highlight);color:var(--color-blue)}
+.tag-green{background:var(--color-success-highlight);color:var(--color-success)}
+.tag-teal{background:var(--color-primary-highlight);color:var(--color-primary)}
+.tag-orange{background:var(--color-orange-highlight);color:var(--color-orange)}
+.tag-warn{background:var(--color-warning-highlight);color:var(--color-warning)}
+
+/* Code block */
+.code-block{background:var(--color-surface-2);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:1rem 1.25rem;font-family:var(--font-mono);
+  font-size:var(--text-xs);overflow-x:auto;margin-top:.75rem;line-height:1.8}
+.code-key{color:var(--color-error)}
+.code-val{color:var(--color-success)}
+.code-str{color:var(--color-blue)}
+.code-comment{color:var(--color-text-faint)}
+
+/* DB table visual */
+.db-table{border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--color-border);
+  margin-top:.75rem;box-shadow:var(--shadow-sm)}
+.db-table table{width:100%;border-collapse:collapse;font-size:var(--text-xs);font-variant-numeric:tabular-nums}
+.db-table thead{background:var(--color-surface-offset)}
+.db-table th{padding:.5rem .75rem;text-align:left;font-weight:600;color:var(--color-text-muted);
+  border-bottom:1px solid var(--color-border)}
+.db-table td{padding:.5rem .75rem;border-bottom:1px solid var(--color-divider)}
+.db-table tr:last-child td{border-bottom:none}
+.db-table .pk{color:var(--color-gold);font-weight:600}
+.db-table .required{color:var(--color-error)}
+.db-table .optional{color:var(--color-text-faint)}
+.db-table .auto{color:var(--color-primary)}
+
+/* Notification boxes */
+.notif-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.75rem}
+@media(max-width:600px){.notif-grid{grid-template-columns:1fr}}
+.notif-card{background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:1rem;box-shadow:var(--shadow-sm)}
+.notif-card h4{font-size:var(--text-sm);font-weight:600;margin-bottom:.4rem;display:flex;
+  align-items:center;gap:.4rem}
+.notif-card p{font-size:var(--text-xs);color:var(--color-text-muted)}
+
+/* Error handling */
+.error-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:.75rem}
+@media(max-width:600px){.error-grid{grid-template-columns:1fr}}
+.error-row{display:flex;flex-direction:column;gap:.25rem}
+.error-row .http{font-family:var(--font-mono);font-size:var(--text-xs);font-weight:700;
+  padding:.2rem .5rem;border-radius:var(--radius-sm);display:inline-block;margin-bottom:.25rem}
+.http-400{background:var(--color-warning-highlight);color:var(--color-warning)}
+.http-500{background:var(--color-error-highlight);color:var(--color-error)}
+.http-200{background:var(--color-success-highlight);color:var(--color-success)}
+
+/* Step colors */
+.step-1 .flow-dot{background:var(--color-blue)}
+.step-2 .flow-dot{background:var(--color-primary)}
+.step-3 .flow-dot{background:var(--color-primary)}
+.step-4 .flow-dot{background:var(--color-success)}
+.step-5 .flow-dot{background:var(--color-orange)}
+.step-6 .flow-dot{background:var(--color-warning)}
+
+/* DSGVO section */
+.dsgvo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:1rem;margin-top:.75rem}
+.dsgvo-item{background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-lg);padding:1rem;box-shadow:var(--shadow-sm)}
+.dsgvo-item .icon{font-size:1.25rem;margin-bottom:.5rem}
+.dsgvo-item h4{font-size:var(--text-sm);font-weight:600;margin-bottom:.25rem}
+.dsgvo-item p{font-size:var(--text-xs);color:var(--color-text-muted)}
+
+/* Summary card */
+.summary-card{background:var(--color-surface);border:1px solid oklch(from var(--color-primary) l c h / 0.3);
+  border-radius:var(--radius-xl);padding:1.5rem;box-shadow:var(--shadow-md);margin-top:2.5rem}
+.summary-card h2{font-size:var(--text-lg);font-weight:700;margin-bottom:1rem}
+.deliverable-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.75rem}
+.deliverable{display:flex;align-items:flex-start;gap:.5rem}
+.deliverable-num{width:24px;height:24px;border-radius:50%;background:var(--color-primary);
+  color:#fff;display:flex;align-items:center;justify-content:center;
+  font-size:var(--text-xs);font-weight:700;flex-shrink:0;margin-top:.1rem}
+.deliverable-text{font-size:var(--text-sm)}
+
+/* Divider */
+.divider{border:none;border-top:1px solid var(--color-divider);margin:2.5rem 0}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">
+        <svg class="logo-icon" viewBox="0 0 40 40" fill="none" aria-label="LeadService Logo">
+          <rect width="40" height="40" rx="10" fill="currentColor" style="color:var(--color-primary)"/>
+          <path d="M10 28L18 12L24 22L28 16" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="28" cy="16" r="3" fill="#fff"/>
+        </svg>
+        <div>
+          <div class="site-title">Lead-Capture Сервис</div>
+          <div class="site-sub">Как это работает — пример Autohaus Borgmann</div>
+        </div>
+      </div>
+    </div>
+    <button class="theme-btn" data-theme-toggle aria-label="Toggle theme">🌙 Тёмная</button>
+  </div>
+
+  <!-- Client card -->
+  <div class="client-card">
+    <div class="client-icon">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+        <rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h5l2 5v4h-7V8z"/>
+        <circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+      </svg>
+    </div>
+    <div class="client-info">
+      <h2>Autohaus Borgmann — Essen-Altenessen</h2>
+      <p>Многосалонный автодилер (Essen, Bottrop, Dülmen): продажа новых и б/у авто, сервисное обслуживание, запись на Probefahrt и Kundendienst. Каждый день сайт принимает десятки запросов на пробные поездки, запись на ТО и консультации.</p>
+      <div class="client-stats">
+        <div class="stat-chip">🚗 <strong>3 филиала</strong></div>
+        <div class="stat-chip">📋 <strong>~30–50 заявок/день</strong></div>
+        <div class="stat-chip">📬 Нет единой базы лидов</div>
+        <div class="stat-chip">⚡ Заявки теряются по e-mail</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Flow -->
+  <div class="section-label">Пошаговая схема</div>
+  <div class="section-title">Как работает твой сервис</div>
+
+  <div class="flow">
+
+    <!-- Step 1: Input -->
+    <div class="flow-step step-1">
+      <div class="flow-line">
+        <div class="flow-dot">1</div>
+        <div class="flow-connector"></div>
+      </div>
+      <div class="flow-content">
+        <h3>Клиент заполняет форму на сайте Autohaus</h3>
+        <p>Покупатель хочет записаться на Probefahrt или задать вопрос по конкретному авто.</p>
+        <div class="flow-box input-box">
+          <strong>ВХОД → POST /lead (JSON)</strong>
+          <div class="code-block">
+{<br>
+&nbsp;&nbsp;<span class="code-key">"name"</span>: <span class="code-str">"Klaus Müller"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"contact"</span>: <span class="code-str">"k.mueller@email.de"</span>, <span class="code-comment">// обязательно!</span><br>
+&nbsp;&nbsp;<span class="code-key">"source"</span>: <span class="code-str">"Probefahrt-Formular"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"comment"</span>: <span class="code-str">"Interessiert an VW Tiguan 2024, Mo-Fr"</span><br>
+}
+          </div>
+          <div class="tag-list">
+            <span class="tag tag-blue">name — имя клиента</span>
+            <span class="tag tag-blue">contact — email или телефон</span>
+            <span class="tag tag-blue">source — откуда пришёл</span>
+            <span class="tag tag-blue">comment — дополнительно</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Validation -->
+    <div class="flow-step step-2">
+      <div class="flow-line">
+        <div class="flow-dot">2</div>
+        <div class="flow-connector"></div>
+      </div>
+      <div class="flow-content">
+        <h3>Flask-сервис принимает и валидирует запрос</h3>
+        <p>Твой Python-сервис проверяет входящий JSON и фильтрует некорректные данные.</p>
+        <div class="flow-box process-box">
+          <strong>Валидация (Flask endpoint)</strong>
+          <div class="tag-list" style="margin-top:.5rem">
+            <span class="tag tag-teal">✓ JSON парсится без ошибок</span>
+            <span class="tag tag-teal">✓ поле contact присутствует</span>
+            <span class="tag tag-teal">✓ contact не пустой</span>
+          </div>
+          <div class="error-grid" style="margin-top:.75rem">
+            <div class="error-row">
+              <span class="http http-400">HTTP 400</span>
+              <span style="font-size:var(--text-xs);color:var(--color-text-muted)">Нет поля contact или невалидный JSON → отказ с сообщением об ошибке</span>
+            </div>
+            <div class="error-row">
+              <span class="http http-500">HTTP 500</span>
+              <span style="font-size:var(--text-xs);color:var(--color-text-muted)">База недоступна → запись в events.log, ответ об ошибке</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: DB -->
+    <div class="flow-step step-3">
+      <div class="flow-line">
+        <div class="flow-dot">3</div>
+        <div class="flow-connector"></div>
+      </div>
+      <div class="flow-content">
+        <h3>Заявка сохраняется в базе данных SQLite</h3>
+        <p>Каждый лид записывается в таблицу <code style="font-family:var(--font-mono);font-size:.85em;background:var(--color-surface-offset);padding:.1rem .35rem;border-radius:3px">leads</code> с временной меткой.</p>
+        <div class="flow-box process-box">
+          <strong>База данных — таблица leads</strong>
+          <div class="db-table">
+            <table>
+              <thead>
+                <tr>
+                  <th>Поле</th><th>Тип</th><th>Описание</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td class="pk">id</td><td>INTEGER PRIMARY KEY</td><td class="auto">автоинкремент</td></tr>
+                <tr><td>created_at</td><td>DATETIME</td><td class="auto">автоматически при записи</td></tr>
+                <tr><td>name</td><td>TEXT</td><td class="optional">имя клиента (необяз.)</td></tr>
+                <tr><td>contact</td><td>TEXT NOT NULL</td><td class="required">email/телефон — ОБЯЗАТЕЛЬНО</td></tr>
+                <tr><td>source</td><td>TEXT</td><td class="optional">источник заявки</td></tr>
+                <tr><td>comment</td><td>TEXT</td><td class="optional">комментарий</td></tr>
+                <tr><td>consent</td><td>BOOLEAN</td><td class="required">согласие DSGVO</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Notification -->
+    <div class="flow-step step-4">
+      <div class="flow-line">
+        <div class="flow-dot">4</div>
+        <div class="flow-connector"></div>
+      </div>
+      <div class="flow-content">
+        <h3>Уведомление менеджеру автосалона</h3>
+        <p>Сразу после сохранения система уведомляет ответственного менеджера о новой заявке.</p>
+        <div class="notif-grid">
+          <div class="notif-card">
+            <h4><span>📄</span> Вариант A: events.log</h4>
+            <p>Каждый лид дописывается в файл с датой/временем. Менеджер видит все заявки хронологически.</p>
+            <div class="code-block" style="margin-top:.5rem">
+[2026-06-24 23:05:12] NEW LEAD<br>
+contact: k.mueller@email.de<br>
+source: Probefahrt-Formular
+            </div>
+          </div>
+          <div class="notif-card">
+            <h4><span>📧</span> Вариант B: E-Mail</h4>
+            <p>Python (smtplib) отправляет письмо менеджеру с деталями заявки сразу при поступлении.</p>
+            <div class="code-block" style="margin-top:.5rem">
+To: manager@borgmann.de<br>
+Subject: Neue Anfrage<br>
+Probefahrt: Klaus Müller<br>
+Tel/Email: k.mueller@...
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5: Response -->
+    <div class="flow-step step-5">
+      <div class="flow-line">
+        <div class="flow-dot">5</div>
+        <div class="flow-connector"></div>
+      </div>
+      <div class="flow-content">
+        <h3>Ответ сайту клиента</h3>
+        <p>Твой API возвращает успешный JSON-ответ форме на сайте автосалона.</p>
+        <div class="flow-box output-box">
+          <strong>ВЫХОД → HTTP 200 OK</strong>
+          <div class="code-block">
+{<br>
+&nbsp;&nbsp;<span class="code-key">"status"</span>: <span class="code-str">"ok"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"message"</span>: <span class="code-str">"Ihre Anfrage wurde gespeichert"</span>,<br>
+&nbsp;&nbsp;<span class="code-key">"lead_id"</span>: <span class="code-val">42</span><br>
+}
+          </div>
+          <div class="tag-list">
+            <span class="tag tag-green">✓ lead сохранён в БД</span>
+            <span class="tag tag-green">✓ менеджер уведомлён</span>
+            <span class="tag tag-green">✓ форма показывает "Vielen Dank!"</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 6: Error -->
+    <div class="flow-step step-6">
+      <div class="flow-line">
+        <div class="flow-dot">6</div>
+      </div>
+      <div class="flow-content">
+        <h3>Обработка ошибок</h3>
+        <p>Все исключения логируются — ни одна заявка не теряется незаметно.</p>
+        <div class="flow-box error-box">
+          <strong>Логирование ошибок</strong>
+          <div class="tag-list" style="margin-top:.5rem">
+            <span class="tag tag-warn">400: нет contact → {"error":"contact required"}</span>
+            <span class="tag tag-warn">400: плохой JSON → {"error":"invalid JSON"}</span>
+            <span class="tag tag-warn">500: БД упала → запись в log + {"error":"db error"}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <hr class="divider">
+
+  <!-- DSGVO -->
+  <div class="section-label">Немецкое законодательство</div>
+  <div class="section-title">DSGVO: что добавить в проект</div>
+  <div class="dsgvo-grid">
+    <div class="dsgvo-item">
+      <div class="icon">☑️</div>
+      <h4>Поле consent</h4>
+      <p>В БД и в JSON — логируй явное согласие клиента на обработку данных (checkbox на форме)</p>
+    </div>
+    <div class="dsgvo-item">
+      <div class="icon">🕐</div>
+      <h4>Срок хранения</h4>
+      <p>Укажи в README и коде, через сколько дней лиды удаляются (напр. 90 дней)</p>
+    </div>
+    <div class="dsgvo-item">
+      <div class="icon">🇩🇪</div>
+      <h4>Хостинг в ЕС</h4>
+      <p>Серверы только в Германии или ЕС (Hetzner, STRATO, netcup) — обязательное условие</p>
+    </div>
+    <div class="dsgvo-item">
+      <div class="icon">🔒</div>
+      <h4>HTTPS</h4>
+      <p>Все запросы только по HTTPS (Let's Encrypt), данные в транзите зашифрованы</p>
+    </div>
+    <div class="dsgvo-item">
+      <div class="icon">📄</div>
+      <h4>Datenschutzerklärung</h4>
+      <p>Ссылка на политику конфиденциальности рядом с формой — юридическое требование</p>
+    </div>
+    <div class="dsgvo-item">
+      <div class="icon">🗑️</div>
+      <h4>Право на удаление</h4>
+      <p>Endpoint DELETE /lead/{id} или функция ручного удаления данных клиента по запросу</p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- Summary -->
+  <div class="summary-card">
+    <h2>Что должно быть в твоём проекте</h2>
+    <div class="deliverable-list">
+      <div class="deliverable">
+        <div class="deliverable-num">1</div>
+        <div class="deliverable-text"><strong>Flask app.py</strong> — роут POST /lead с валидацией и обработкой ошибок</div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">2</div>
+        <div class="deliverable-text"><strong>database.py</strong> — инициализация SQLite, функции create_lead()</div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">3</div>
+        <div class="deliverable-text"><strong>notifier.py</strong> — запись в events.log или отправка e-mail</div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">4</div>
+        <div class="deliverable-text"><strong>leads.db</strong> — SQLite файл с таблицей leads + поле consent</div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">5</div>
+        <div class="deliverable-text"><strong>events.log</strong> — файл логов новых заявок и ошибок</div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">6</div>
+        <div class="deliverable-text"><strong>README.md</strong> — инструкция запуска за 5–10 мин, DSGVO-заметки</div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">7</div>
+        <div class="deliverable-text"><strong>test_requests.http</strong> или скрипт — 5–10 тестовых POST-запросов</div>
+      </div>
+      <div class="deliverable">
+        <div class="deliverable-num">8</div>
+        <div class="deliverable-text"><strong>GitHub repo</strong> — чистая структура, .gitignore, requirements.txt</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const t=document.querySelector('[data-theme-toggle]');
+  const r=document.documentElement;
+  let d=matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';
+  r.setAttribute('data-theme',d);
+  if(t){
+    t.textContent=d==='dark'?'☀️ Светлая':'🌙 Тёмная';
+    t.addEventListener('click',()=>{
+      d=d==='dark'?'light':'dark';
+      r.setAttribute('data-theme',d);
+      t.textContent=d==='dark'?'☀️ Светлая':'🌙 Тёмная';
+    });
+  }
+})();
+</script>
+</body>
+</html>
