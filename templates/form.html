@@ -3,50 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anfrage</title>
+    <title data-de="Anfrage" data-ru="Заявка">Anfrage</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <nav>
-    <a href="/" class="active">📋 Anfrage</a>
+    <a href="/" class="active">📋 <span data-i18n="nav_form">Anfrage</span></a>
     <a href="/admin">🔧 Admin</a>
+    <button class="lang-btn" id="lang-toggle" aria-label="Switch language">
+        <span id="lang-label"><span class="active-lang">DE</span> / RU</span>
+    </button>
 </nav>
 <div class="container">
     <div class="card">
-        <h1>Neue Anfrage</h1>
-        <p class="subtitle">Wir melden uns bald bei Ihnen.</p>
+        <h1 data-i18n="title">Neue Anfrage</h1>
+        <p class="subtitle" data-i18n="subtitle">Wir melden uns bald bei Ihnen.</p>
         <form id="lead-form">
             <div class="field">
-                <label>Name (optional)</label>
-                <input type="text" id="name" placeholder="Klaus Müller">
+                <label data-i18n="label_name">Name (optional)</label>
+                <input type="text" id="name" data-ph-de="Klaus Müller" data-ph-ru="Иван Иванов" placeholder="Klaus Müller">
             </div>
             <div class="field">
-                <label>E-Mail oder Telefon *</label>
-                <input type="text" id="contact" placeholder="k.mueller@email.de">
+                <label data-i18n="label_contact">E-Mail oder Telefon *</label>
+                <input type="text" id="contact" data-ph-de="k.mueller@email.de" data-ph-ru="ivan@email.ru" placeholder="k.mueller@email.de">
             </div>
             <div class="field">
-                <label>Betreff (optional)</label>
-                <input type="text" id="source" placeholder="Probefahrt, Service...">
+                <label data-i18n="label_source">Betreff (optional)</label>
+                <input type="text" id="source" data-ph-de="Probefahrt, Service..." data-ph-ru="Тест-драйв, Сервис..." placeholder="Probefahrt, Service...">
             </div>
             <div class="field">
-                <label>Nachricht (optional)</label>
-                <textarea id="comment" placeholder="VW Tiguan 2024, Mo-Fr..."></textarea>
+                <label data-i18n="label_comment">Nachricht (optional)</label>
+                <textarea id="comment" data-ph-de="VW Tiguan 2024, Mo-Fr..." data-ph-ru="VW Tiguan 2024, Пн-Пт..." placeholder="VW Tiguan 2024, Mo-Fr..."></textarea>
             </div>
             <div class="field checkbox">
                 <label>
                     <input type="checkbox" id="consent">
-                    Ich stimme der Verarbeitung meiner Daten zu (DSGVO)
+                    <span data-i18n="consent_text">Ich stimme der Verarbeitung meiner Daten zu (DSGVO)</span>
                 </label>
             </div>
             <div id="error-msg" class="error hidden"></div>
-            <div id="success-msg" class="success hidden">✓ Vielen Dank! Wir melden uns bald.</div>
-            <button type="submit">Anfrage senden →</button>
+            <div id="success-msg" class="success hidden" data-i18n="success">✓ Vielen Dank! Wir melden uns bald.</div>
+            <button type="submit" data-i18n="submit">Anfrage senden →</button>
         </form>
     </div>
 </div>
 <script>
+const i18n = {
+    de: {
+        nav_form:      'Anfrage',
+        title:         'Neue Anfrage',
+        subtitle:      'Wir melden uns bald bei Ihnen.',
+        label_name:    'Name (optional)',
+        label_contact: 'E-Mail oder Telefon *',
+        label_source:  'Betreff (optional)',
+        label_comment: 'Nachricht (optional)',
+        consent_text:  'Ich stimme der Verarbeitung meiner Daten zu (DSGVO)',
+        success:       '✓ Vielen Dank! Wir melden uns bald.',
+        submit:        'Anfrage senden →',
+        err_contact:   'Bitte geben Sie Ihre Kontaktdaten ein.',
+        err_consent:   'Bitte stimmen Sie der Datenverarbeitung zu.',
+        err_server:    'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später.',
+    },
+    ru: {
+        nav_form:      'Заявка',
+        title:         'Новая заявка',
+        subtitle:      'Мы свяжемся с вами в ближайшее время.',
+        label_name:    'Имя (необязательно)',
+        label_contact: 'E-Mail или телефон *',
+        label_source:  'Тема (необязательно)',
+        label_comment: 'Сообщение (необязательно)',
+        consent_text:  'Я согласен на обработку моих данных (DSGVO)',
+        success:       '✓ Спасибо! Мы свяжемся с вами.',
+        submit:        'Отправить заявку →',
+        err_contact:   'Пожалуйста, введите контактные данные.',
+        err_consent:   'Пожалуйста, дайте согласие на обработку данных.',
+        err_server:    'Произошла ошибка. Попробуйте позже.',
+    }
+};
+
+let lang = localStorage.getItem('form_lang') || 'de';
+
+function applyLang(l) {
+    lang = l;
+    localStorage.setItem('form_lang', l);
+    document.documentElement.lang = l;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (i18n[l][key] !== undefined) el.textContent = i18n[l][key];
+    });
+
+    document.querySelectorAll('[data-ph-de]').forEach(el => {
+        el.placeholder = el.dataset['ph' + l.charAt(0).toUpperCase() + l.slice(1)]
+            || el.dataset['phDe'];
+    });
+
+    const titleEl = document.querySelector('title');
+    if (titleEl) titleEl.textContent = i18n[l].nav_form;
+
+    document.getElementById('lang-label').innerHTML =
+        l === 'de'
+            ? '<span class="active-lang">DE</span> / RU'
+            : 'DE / <span class="active-lang">RU</span>';
+}
+
+document.getElementById('lang-toggle').addEventListener('click', () => {
+    applyLang(lang === 'de' ? 'ru' : 'de');
+});
+
+applyLang(lang);
+
 document.getElementById('lead-form').addEventListener('submit', async (e) => {
     e.preventDefault();
+    const t = i18n[lang];
     const errorEl = document.getElementById('error-msg');
     const successEl = document.getElementById('success-msg');
     errorEl.classList.add('hidden');
@@ -56,20 +125,20 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     const consent = document.getElementById('consent').checked;
 
     if (!contact) {
-        errorEl.textContent = 'Bitte geben Sie Ihre Kontaktdaten ein.';
+        errorEl.textContent = t.err_contact;
         errorEl.classList.remove('hidden');
         return;
     }
     if (!consent) {
-        errorEl.textContent = 'Bitte stimmen Sie der Datenverarbeitung zu.';
+        errorEl.textContent = t.err_consent;
         errorEl.classList.remove('hidden');
         return;
     }
 
     const body = {
-        name: document.getElementById('name').value.trim() || null,
+        name:    document.getElementById('name').value.trim() || null,
         contact: contact,
-        source: document.getElementById('source').value.trim() || null,
+        source:  document.getElementById('source').value.trim() || null,
         comment: document.getElementById('comment').value.trim() || null,
         consent: true,
     };
@@ -84,11 +153,11 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
             document.getElementById('lead-form').reset();
             successEl.classList.remove('hidden');
         } else {
-            errorEl.textContent = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später.';
+            errorEl.textContent = t.err_server;
             errorEl.classList.remove('hidden');
         }
     } catch {
-        errorEl.textContent = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später.';
+        errorEl.textContent = t.err_server;
         errorEl.classList.remove('hidden');
     }
 });

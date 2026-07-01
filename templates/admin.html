@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin — Anfragen</title>
+    <title data-de="Admin — Anfragen" data-ru="Админ — Заявки">Admin — Anfragen</title>
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 <nav>
-    <a href="/">📋 Anfrage</a>
-    <a href="/admin" class="active">🔧 Admin</a>
+    <a href="/">📋 <span data-i18n="nav_form">Anfrage</span></a>
+    <a href="/admin" class="active">🔧 <span data-i18n="nav_admin">Admin</span></a>
+    <button class="lang-btn" id="lang-toggle" aria-label="Switch language">
+        <span id="lang-label"><span class="active-lang">DE</span> / RU</span>
+    </button>
 </nav>
-<div class="container">
+<div class="container" style="max-width:960px">
     <div class="card">
         <div class="admin-header">
-            <h1>Eingegangene Anfragen</h1>
+            <h1 data-i18n="title">Eingegangene Anfragen</h1>
             <div class="header-actions">
-                <span class="badge">{{ leads|length }} Anfragen</span>
+                <span class="badge">{{ leads|length }} <span data-i18n="badge_suffix">Anfragen</span></span>
                 <a href="/admin/export.csv" class="btn-export">⬇ CSV</a>
                 <a href="/admin/export.json" class="btn-export">⬇ JSON</a>
             </div>
@@ -25,11 +28,11 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Name</th>
-                    <th>Kontakt</th>
-                    <th>Betreff</th>
-                    <th>Datum</th>
-                    <th>Löschen</th>
+                    <th data-i18n="col_name">Name</th>
+                    <th data-i18n="col_contact">Kontakt</th>
+                    <th data-i18n="col_source">Betreff</th>
+                    <th data-i18n="col_date">Datum</th>
+                    <th data-i18n="col_delete">Löschen</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,8 +45,8 @@
                     <td>{{ lead.created_at[:10] }}</td>
                     <td>
                         <form method="POST" action="/admin/delete/{{ lead.id }}"
-                              onsubmit="return confirm('Diesen Lead wirklich löschen?')">
-                            <button type="submit" class="btn-delete">Löschen</button>
+                              onsubmit="return confirmDelete()">
+                            <button type="submit" class="btn-delete" data-i18n="btn_delete">Löschen</button>
                         </form>
                     </td>
                 </tr>
@@ -51,9 +54,73 @@
             </tbody>
         </table>
         {% if not leads %}
-        <p class="empty">Noch keine Anfragen eingegangen.</p>
+        <p class="empty" data-i18n="empty">Noch keine Anfragen eingegangen.</p>
         {% endif %}
     </div>
 </div>
+<script>
+const i18n = {
+    de: {
+        nav_form:     'Anfrage',
+        nav_admin:    'Admin',
+        title:        'Eingegangene Anfragen',
+        badge_suffix: 'Anfragen',
+        col_name:     'Name',
+        col_contact:  'Kontakt',
+        col_source:   'Betreff',
+        col_date:     'Datum',
+        col_delete:   'Löschen',
+        btn_delete:   'Löschen',
+        empty:        'Noch keine Anfragen eingegangen.',
+        confirm_delete: 'Diesen Lead wirklich löschen?',
+        page_title:   'Admin — Anfragen',
+    },
+    ru: {
+        nav_form:     'Заявка',
+        nav_admin:    'Админ',
+        title:        'Входящие заявки',
+        badge_suffix: 'заявок',
+        col_name:     'Имя',
+        col_contact:  'Контакт',
+        col_source:   'Тема',
+        col_date:     'Дата',
+        col_delete:   'Удалить',
+        btn_delete:   'Удалить',
+        empty:        'Заявок пока нет.',
+        confirm_delete: 'Удалить эту заявку?',
+        page_title:   'Админ — Заявки',
+    }
+};
+
+let lang = localStorage.getItem('form_lang') || 'de';
+
+function applyLang(l) {
+    lang = l;
+    localStorage.setItem('form_lang', l);
+    document.documentElement.lang = l;
+
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.dataset.i18n;
+        if (i18n[l][key] !== undefined) el.textContent = i18n[l][key];
+    });
+
+    document.title = i18n[l].page_title;
+
+    document.getElementById('lang-label').innerHTML =
+        l === 'de'
+            ? '<span class="active-lang">DE</span> / RU'
+            : 'DE / <span class="active-lang">RU</span>';
+}
+
+function confirmDelete() {
+    return confirm(i18n[lang].confirm_delete);
+}
+
+document.getElementById('lang-toggle').addEventListener('click', () => {
+    applyLang(lang === 'de' ? 'ru' : 'de');
+});
+
+applyLang(lang);
+</script>
 </body>
 </html>
