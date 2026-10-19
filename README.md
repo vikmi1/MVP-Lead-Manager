@@ -4,6 +4,11 @@
 
 An MVP service for collecting leads (inquiries) from customers. It includes a web form for customers and a manager page for viewing, deleting and exporting leads. Leads are stored in SQLite; the manager is notified via a log file and email, and every lead is also copied into a Google Sheet.
 
+## Live demo
+
+**[https://vibecoding.aithinglab.com/mvp-lead-manager/](https://vibecoding.aithinglab.com/mvp-lead-manager/)** — form, manager page ([/admin](https://vibecoding.aithinglab.com/mvp-lead-manager/admin)) and Swagger UI ([/docs](https://vibecoding.aithinglab.com/mvp-lead-manager/docs)).
+The demo runs in demo mode: entries are public, email and Google Sheets are off, and the data is reset to sample leads every 30 minutes — please do not enter real personal data.
+
 ## Screenshots
 
 | Customer inquiry form | Manager page |

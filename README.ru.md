@@ -4,6 +4,11 @@
 
 MVP-сервис для приёма заявок (лидов) от клиентов. Включает веб-форму для клиентов и страницу менеджера для просмотра, удаления и экспорта заявок. Сохраняет в SQLite, уведомляет менеджера через лог-файл и email, дублирует заявки в Google-таблицу.
 
+## Живое демо
+
+**[https://vibecoding.aithinglab.com/mvp-lead-manager/](https://vibecoding.aithinglab.com/mvp-lead-manager/)** — форма, страница менеджера ([/admin](https://vibecoding.aithinglab.com/mvp-lead-manager/admin)) и Swagger UI ([/docs](https://vibecoding.aithinglab.com/mvp-lead-manager/docs)).
+Демо работает в демо-режиме: введённые данные видны всем, email и Google Sheets отключены, а каждые 30 минут база сбрасывается к примерам заявок — не вводите реальные персональные данные.
+
 ## Скриншоты
 
 | Форма заявки для клиента | Страница менеджера |

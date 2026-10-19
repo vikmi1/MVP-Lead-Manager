@@ -4,6 +4,11 @@
 
 Ein MVP-Dienst zur Erfassung von Anfragen (Leads) von Kunden. Er enthält ein Webformular für Kunden und eine Manager-Seite zum Ansehen, Löschen und Exportieren der Anfragen. Die Daten werden in SQLite gespeichert, der Manager wird per Logdatei und E-Mail benachrichtigt, und jede Anfrage wird zusätzlich in eine Google-Tabelle übertragen.
 
+## Live-Demo
+
+**[https://vibecoding.aithinglab.com/mvp-lead-manager/](https://vibecoding.aithinglab.com/mvp-lead-manager/)** – Formular, Manager-Seite ([/admin](https://vibecoding.aithinglab.com/mvp-lead-manager/admin)) und Swagger UI ([/docs](https://vibecoding.aithinglab.com/mvp-lead-manager/docs)).
+Die Demo läuft im Demo-Modus: Eingaben sind öffentlich sichtbar, E-Mail und Google Sheets sind deaktiviert, und die Daten werden alle 30 Minuten auf Beispielanfragen zurückgesetzt – bitte keine echten personenbezogenen Daten eingeben.
+
 ## Screenshots
 
 | Anfrageformular für Kunden | Manager-Seite |
