@@ -2,6 +2,17 @@
 
 MVP-сервис для приёма заявок (лидов) от клиентов. Включает веб-форму для клиентов и страницу менеджера для просмотра, удаления и экспорта заявок. Сохраняет в SQLite, уведомляет менеджера через лог-файл и email, дублирует заявки в Google-таблицу.
 
+## Скриншоты
+
+| Форма заявки для клиента | Страница менеджера |
+|---|---|
+| ![Форма заявки](screenshots/form.png) | ![Страница менеджера со списком заявок](screenshots/admin.png) |
+
+<details><summary>Swagger UI (REST API)</summary>
+
+![Swagger UI](screenshots/swagger.png)
+</details>
+
 **Стек:** Python 3.11+, FastAPI, Pydantic v2, SQLite, Jinja2, uvicorn
 
 **Возможности:**
