@@ -4,16 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title data-de="Anfrage" data-ru="Заявка">Anfrage</title>
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="{{ request.scope.root_path }}/static/style.css">
 </head>
 <body>
 <nav>
-    <a href="/" class="active">📋 <span data-i18n="nav_form">Anfrage</span></a>
-    <a href="/admin">🔧 Admin</a>
+    <a href="{{ request.scope.root_path }}/" class="active">📋 <span data-i18n="nav_form">Anfrage</span></a>
+    <a href="{{ request.scope.root_path }}/admin">🔧 Admin</a>
     <button class="lang-btn" id="lang-toggle" aria-label="Switch language">
         <span id="lang-label"><span class="active-lang">DE</span> / RU</span>
     </button>
 </nav>
+{% if demo_mode %}
+<div class="demo-banner">
+    Demo · Alle Eingaben sind öffentlich sichtbar und werden alle {{ demo_reset_minutes }} Minuten gelöscht. Bitte keine echten Daten eingeben.<br>
+    All entries are public and reset every {{ demo_reset_minutes }} minutes. Please do not enter real personal data.
+</div>
+{% endif %}
 <div class="container">
     <div class="card">
         <h1 data-i18n="title">Neue Anfrage</h1>
@@ -144,7 +150,7 @@ document.getElementById('lead-form').addEventListener('submit', async (e) => {
     };
 
     try {
-        const res = await fetch('/lead', {
+        const res = await fetch('{{ request.scope.root_path }}/lead', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body),

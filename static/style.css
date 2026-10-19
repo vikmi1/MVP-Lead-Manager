@@ -203,3 +203,13 @@ tr:hover td { background: #fafafa; }
     table { font-size: 0.8rem; }
     th, td { padding: 0.4rem 0.5rem; }
 }
+
+.demo-banner {
+    background: #fff4d6;
+    border-bottom: 1px solid #f0d58a;
+    color: #5c4400;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    padding: 0.6rem 1rem;
+    text-align: center;
+}

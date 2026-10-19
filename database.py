@@ -53,6 +53,12 @@ def get_leads(db_path: str, limit: int = 50, offset: int = 0) -> list[dict]:
     return [dict(row) for row in rows]
 
 
+def delete_all_leads(db_path: str) -> None:
+    with _get_conn(db_path) as conn:
+        conn.execute("DELETE FROM leads")
+        conn.commit()
+
+
 def delete_lead(db_path: str, lead_id: int) -> bool:
     with _get_conn(db_path) as conn:
         cursor = conn.execute("DELETE FROM leads WHERE id = ?", (lead_id,))

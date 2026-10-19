@@ -1,3 +1,4 @@
+import asyncio
 import csv
 import io
 import json
@@ -10,6 +11,7 @@ from fastapi.responses import RedirectResponse, Response
 
 import config
 import database
+import demo
 import notifier
 from auth import verify_api_key
 from models import LeadCreate, LeadOut
@@ -18,13 +20,23 @@ from models import LeadCreate, LeadOut
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     database.init_db(config.DB_PATH)
+    reset_task = None
+    if config.DEMO_MODE:
+        demo.reset_demo_data(config.DB_PATH)
+        reset_task = asyncio.create_task(
+            demo.reset_periodically(config.DB_PATH, config.DEMO_RESET_MINUTES)
+        )
     yield
+    if reset_task:
+        reset_task.cancel()
 
 
 app = FastAPI(title="Lead-Capture Service", version="1.0.0", lifespan=lifespan)
 
 BASE_DIR = Path(__file__).parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+templates.env.globals["demo_mode"] = config.DEMO_MODE
+templates.env.globals["demo_reset_minutes"] = config.DEMO_RESET_MINUTES
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
 
 
@@ -95,9 +107,9 @@ def admin_page(request: Request):
 
 
 @app.post("/admin/delete/{lead_id}", include_in_schema=False)
-def admin_delete(lead_id: int):
+def admin_delete(request: Request, lead_id: int):
     database.delete_lead(config.DB_PATH, lead_id)
-    return RedirectResponse(url="/admin", status_code=303)
+    return RedirectResponse(url=f"{request.scope.get('root_path', '')}/admin", status_code=303)
 
 
 # Большой лимит, чтобы экспортировать все заявки, а не только первые 50

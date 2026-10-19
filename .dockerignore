@@ -1,0 +1,9 @@
+.git
+.env
+deploy/.env
+leads.db
+events.log
+__pycache__/
+*.pyc
+.pytest_cache/
+screenshots/
